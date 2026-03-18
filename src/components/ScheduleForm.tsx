@@ -96,9 +96,8 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
           value={formData.title}
           onChange={(e) => handleChange('title', e.target.value)}
           maxLength={TITLE_MAX_LENGTH}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
-            errors.title ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${errors.title ? 'border-red-500' : 'border-gray-300'
+            }`}
           placeholder="Enter schedule title"
         />
         {errors.title && <p className="mt-1 text-sm text-red-500">{errors.title}</p>}
@@ -113,9 +112,8 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
             type="time"
             value={formData.startTime}
             onChange={(e) => handleChange('startTime', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
-              errors.startTime ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${errors.startTime ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.startTime && <p className="mt-1 text-sm text-red-500">{errors.startTime}</p>}
         </div>
@@ -128,9 +126,8 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
             type="time"
             value={formData.endTime}
             onChange={(e) => handleChange('endTime', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${
-              errors.endTime ? 'border-red-500' : 'border-gray-300'
-            }`}
+            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${errors.endTime ? 'border-red-500' : 'border-gray-300'
+              }`}
           />
           {errors.endTime && <p className="mt-1 text-sm text-red-500">{errors.endTime}</p>}
         </div>
@@ -150,9 +147,8 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
           onChange={(e) => handleChange('description', e.target.value)}
           maxLength={DESCRIPTION_MAX_LENGTH}
           rows={3}
-          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none ${
-            errors.description ? 'border-red-500' : 'border-gray-300'
-          }`}
+          className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none ${errors.description ? 'border-red-500' : 'border-gray-300'
+            }`}
           placeholder="Enter description"
         />
         {errors.description && <p className="mt-1 text-sm text-red-500">{errors.description}</p>}
@@ -170,7 +166,7 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
           type="submit"
           className="flex-1 px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-colors"
         >
-          {schedule ? 'Update' : 'Add'} Schedule
+          {schedule ? 'Update' : 'Add'}
         </button>
       </div>
     </form>
