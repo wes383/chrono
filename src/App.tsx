@@ -73,13 +73,13 @@ function AppContent() {
                 </button>
               )}
             </div>
-            {user && isEditable && (
+            {user && (
               <button
-                onClick={handleAdd}
-                className={`flex items-center gap-2 px-4 py-2 font-medium rounded-lg transition-colors border border-gray-300 ${
+                onClick={isEditable ? handleAdd : undefined}
+                className={`flex items-center gap-2 px-4 py-2 font-medium rounded-lg transition-colors ${
                   isEditable
-                    ? 'bg-white hover:bg-gray-100 text-gray-900'
-                    : 'bg-gray-100 text-gray-400 opacity-0'
+                    ? 'bg-white hover:bg-gray-100 text-gray-900 border border-gray-300'
+                    : 'invisible'
                 }`}
               >
                 <Plus size={20} />
