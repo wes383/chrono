@@ -106,8 +106,8 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
       .update({
         title: schedule.title,
         start_time: schedule.startTime,
-        end_time: schedule.endTime,
-        description: schedule.description,
+        end_time: schedule.endTime ?? null,
+        description: schedule.description ?? null,
         completed: schedule.completed,
       })
       .eq('id', schedule.id);

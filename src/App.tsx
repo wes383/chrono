@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Plus, LogOut } from 'lucide-react';
 import { ScheduleProvider, useSchedule } from './context/ScheduleContext';
 import { Timeline } from './components/Timeline';
 import { DateSwitcher } from './components/DateSwitcher';
@@ -62,14 +62,16 @@ function AppContent() {
         <div className="max-w-3xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <h1 className="text-2xl font-bold text-gray-900">Chrono</h1>
+
               {user && (
                 <button
                   onClick={handleLogout}
-                  className="group hidden sm:flex items-center w-48 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-900 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
+                  className="group flex items-center justify-center sm:justify-start w-auto sm:w-48 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-900 p-2 sm:px-3 sm:py-1.5 rounded-lg border border-gray-200 sm:border-0 sm:border-transparent transition-colors cursor-pointer"
+                  title="Log out"
                 >
-                  <span className="group-hover:hidden truncate text-left">{user.email}</span>
-                  <span className="hidden group-hover:block text-left">Log out</span>
+                  <LogOut className="block sm:hidden w-5 h-5 text-gray-500 hover:text-gray-900" />
+                  <span className="hidden sm:block group-hover:hidden truncate text-left">{user.email}</span>
+                  <span className="hidden sm:group-hover:block text-left">Log out</span>
                 </button>
               )}
             </div>
