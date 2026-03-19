@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import type { Session, User } from '@supabase/supabase-js';
-import type { Schedule } from '../types/schedule';
 import { supabase } from '../lib/supabase';
+import type { Schedule } from '../types/schedule';
 import { getToday } from '../utils/dateUtils';
 import { ScheduleContext } from './ScheduleShared';
 
@@ -63,8 +63,8 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      syncAuthState(session);
+    supabase.auth.getSession().then(({ data: { session: nextSession } }) => {
+      syncAuthState(nextSession);
     }).catch((error) => {
       console.error('Failed to restore session:', error);
       setSession(null);
@@ -73,8 +73,8 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      syncAuthState(session);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, nextSession) => {
+      syncAuthState(nextSession);
     });
 
     return () => subscription.unsubscribe();
@@ -124,27 +124,30 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
   }, [user?.id]);
 
   const addSchedule = async (schedule: Omit<Schedule, 'id'>) => {
-    if (!user) return;
-
-    const dbSchedule = {
-      title: schedule.title,
-      start_time: schedule.startTime,
-      end_time: schedule.endTime,
-      description: schedule.description,
-      date: schedule.date,
-      completed: schedule.completed,
-      user_id: user.id,
-    };
+    if (!user) {
+      return;
+    }
 
     const { data, error } = await supabase
       .from('schedules')
-      .insert(dbSchedule)
+      .insert({
+        title: schedule.title,
+        start_time: schedule.startTime,
+        end_time: schedule.endTime,
+        description: schedule.description,
+        date: schedule.date,
+        completed: schedule.completed ?? false,
+        user_id: user.id,
+      })
       .select()
       .single();
 
-    if (!error && data) {
-      setSchedules((prev) => [...prev, mapDbToSchedule(data)]);
+    if (error) {
+      console.error('Failed to add schedule:', error);
+      return;
     }
+
+    setSchedules((prev) => [...prev, mapDbToSchedule(data)]);
   };
 
   const updateSchedule = async (schedule: Schedule) => {
@@ -155,49 +158,50 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
         start_time: schedule.startTime,
         end_time: schedule.endTime ?? null,
         description: schedule.description ?? null,
-        completed: schedule.completed,
+        completed: schedule.completed ?? false,
       })
       .eq('id', schedule.id);
 
-    if (!error) {
-      setSchedules((prev) =>
-        prev.map((s) => (s.id === schedule.id ? schedule : s))
-      );
+    if (error) {
+      console.error('Failed to update schedule:', error);
+      return;
     }
+
+    setSchedules((prev) => prev.map((item) => (item.id === schedule.id ? schedule : item)));
   };
 
   const deleteSchedule = async (id: string) => {
-    const { error } = await supabase
-      .from('schedules')
-      .delete()
-      .eq('id', id);
+    const { error } = await supabase.from('schedules').delete().eq('id', id);
 
-    if (!error) {
-      setSchedules((prev) => prev.filter((s) => s.id !== id));
+    if (error) {
+      console.error('Failed to delete schedule:', error);
+      return;
     }
+
+    setSchedules((prev) => prev.filter((item) => item.id !== id));
   };
 
   const toggleComplete = async (id: string) => {
-    const schedule = schedules.find((s) => s.id === id);
-    if (!schedule) return;
+    const schedule = schedules.find((item) => item.id === id);
+
+    if (!schedule) {
+      return;
+    }
 
     const newCompleted = !schedule.completed;
+    const { error } = await supabase.from('schedules').update({ completed: newCompleted }).eq('id', id);
 
-    const { error } = await supabase
-      .from('schedules')
-      .update({ completed: newCompleted })
-      .eq('id', id);
-
-    if (!error) {
-      setSchedules((prev) =>
-        prev.map((s) => (s.id === id ? { ...s, completed: newCompleted } : s))
-      );
+    if (error) {
+      console.error('Failed to toggle schedule completion:', error);
+      return;
     }
+
+    setSchedules((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, completed: newCompleted } : item))
+    );
   };
 
-  const getSchedulesByDate = (date: string) => {
-    return schedules.filter((s) => s.date === date);
-  };
+  const getSchedulesByDate = (date: string) => schedules.filter((item) => item.date === date);
 
   return (
     <ScheduleContext.Provider
