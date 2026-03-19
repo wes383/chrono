@@ -51,14 +51,14 @@ export function Auth({ onSuccess }: AuthProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 p-8 shadow-sm">
+      <div className="w-full max-w-sm sm:max-w-md bg-white rounded-2xl border border-gray-200 p-6 sm:p-8 shadow-sm">
         <h1 className="text-2xl font-bold text-gray-900 text-center mb-2">Chrono</h1>
-        <p className="text-gray-500 text-center mb-8">
+        <p className="text-gray-500 text-center mb-6 sm:mb-8">
           {isLogin ? 'Sign in to your account' : 'Create a new account'}
         </p>
 
         {message && (
-          <div className="mb-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-4 p-3 sm:p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-green-700 text-sm">{message}</p>
           </div>
         )}
@@ -73,7 +73,7 @@ export function Auth({ onSuccess }: AuthProps) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-base"
               placeholder="you@example.com"
             />
           </div>
@@ -88,7 +88,7 @@ export function Auth({ onSuccess }: AuthProps) {
               onChange={(e) => setPassword(e.target.value)}
               required
               minLength={6}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+              className="w-full px-4 py-3 sm:py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none text-base"
               placeholder="Min. 6 characters"
             />
           </div>
@@ -100,7 +100,7 @@ export function Auth({ onSuccess }: AuthProps) {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
+            className="w-full py-3 sm:py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors disabled:opacity-50"
           >
             {loading ? 'Please wait...' : isLogin ? 'Sign In' : 'Sign Up'}
           </button>
@@ -114,7 +114,7 @@ export function Auth({ onSuccess }: AuthProps) {
               setError('');
               setMessage('');
             }}
-            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+            className="text-blue-600 hover:text-blue-700 text-sm font-medium py-2"
           >
             {isLogin ? "Don't have an account? Sign Up" : 'Already have an account? Sign In'}
           </button>

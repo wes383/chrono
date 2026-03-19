@@ -58,29 +58,27 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="relative w-full">
-        <div className="max-w-3xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-
+      <header className="bg-gray-50">
+        <div className="max-w-3xl mx-auto px-3 sm:px-4">
+          <div className="flex items-center justify-between gap-2 py-3">
+            <div className="flex items-center gap-2">
               {user && (
                 <button
                   onClick={handleLogout}
-                  className="group flex items-center justify-center sm:justify-start w-auto sm:w-48 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-900 p-2 sm:px-3 sm:py-1.5 rounded-lg border border-gray-200 sm:border-0 sm:border-transparent transition-colors cursor-pointer"
+                  className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 sm:w-auto sm:px-3 sm:py-1.5 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-900 rounded-lg transition-colors"
                   title="Log out"
                 >
-                  <LogOut className="block sm:hidden w-5 h-5 text-gray-500 hover:text-gray-900" />
-                  <span className="hidden sm:block group-hover:hidden truncate text-left">{user.email}</span>
-                  <span className="hidden sm:group-hover:block text-left">Log out</span>
+                  <LogOut className="sm:hidden w-5 h-5" />
+                  <span className="hidden sm:block truncate max-w-[160px]">{user.email}</span>
                 </button>
               )}
             </div>
             {user && (
               <button
                 onClick={isEditable ? handleAdd : undefined}
-                className={`flex items-center gap-2 px-4 py-2 font-medium rounded-lg transition-colors ${
+                className={`flex items-center justify-center gap-2 min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 px-3 sm:px-4 py-2 font-medium rounded-lg transition-colors ${
                   isEditable
-                    ? 'bg-white hover:bg-gray-100 text-gray-900 border border-gray-300'
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
                     : 'invisible'
                 }`}
               >
@@ -89,21 +87,20 @@ function AppContent() {
               </button>
             )}
           </div>
+          <div className="pb-3 -mx-3 sm:-mx-4 px-3 sm:px-4">
+            <DateSwitcher currentDate={currentDate} onChange={setCurrentDate} datesWithSchedules={datesWithSchedules} />
+          </div>
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-6">
-        <div className="mb-6">
-          <DateSwitcher currentDate={currentDate} onChange={setCurrentDate} datesWithSchedules={datesWithSchedules} />
-        </div>
-
+      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-4 sm:py-6">
         {!isEditable && (
-          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
+          <div className="mb-4 p-3 sm:p-4 bg-amber-50 border border-amber-200 rounded-xl text-center">
             <p className="text-amber-800 text-sm font-medium">View-only</p>
           </div>
         )}
 
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+        <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 shadow-sm">
           <Timeline
             schedules={currentSchedules}
             onEdit={handleEdit}

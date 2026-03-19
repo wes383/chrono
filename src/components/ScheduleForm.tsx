@@ -103,7 +103,7 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
         {errors.title && <p className="mt-1 text-sm text-red-500">{errors.title}</p>}
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
             Start Time <span className="text-red-500">*</span>
@@ -112,7 +112,7 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
             type="time"
             value={formData.startTime}
             onChange={(e) => handleChange('startTime', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${errors.startTime ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base ${errors.startTime ? 'border-red-500' : 'border-gray-300'
               }`}
           />
           {errors.startTime && <p className="mt-1 text-sm text-red-500">{errors.startTime}</p>}
@@ -126,7 +126,7 @@ export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFor
             type="time"
             value={formData.endTime}
             onChange={(e) => handleChange('endTime', e.target.value)}
-            className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all ${errors.endTime ? 'border-red-500' : 'border-gray-300'
+            className={`w-full px-4 py-3 sm:py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-base ${errors.endTime ? 'border-red-500' : 'border-gray-300'
               }`}
           />
           {errors.endTime && <p className="mt-1 text-sm text-red-500">{errors.endTime}</p>}

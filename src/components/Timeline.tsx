@@ -39,15 +39,15 @@ export function Timeline({ schedules, onEdit, onDelete, onToggleComplete }: Time
   return (
     <div className="relative">
       {/* Main timeline line */}
-      <div className="absolute left-[19px] top-2 bottom-2 w-0.5 bg-gray-200" />
+      <div className="absolute left-[15px] sm:left-[19px] top-2 bottom-2 w-0.5 bg-gray-200" />
       
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {sortedSchedules.map((schedule) => (
-          <div key={schedule.id} className="relative flex items-start gap-4">
+          <div key={schedule.id} className="relative flex items-start gap-3 sm:gap-4">
             {/* Timeline node */}
             <div className="relative flex flex-col items-center shrink-0">
-              <div className="w-10 h-10 flex items-center justify-center bg-white z-10">
-                <div className={`w-4 h-4 rounded-full border-4 border-white shadow-sm ${
+              <div className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center bg-white z-10">
+                <div className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full border-4 border-white shadow-sm ${
                   schedule.completed ? 'bg-green-500' : 'bg-blue-500'
                 }`} />
               </div>
