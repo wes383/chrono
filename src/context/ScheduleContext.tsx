@@ -1,24 +1,9 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import type { User, Session } from '@supabase/supabase-js';
+import { useEffect, useState, type ReactNode } from 'react';
+import type { Session, User } from '@supabase/supabase-js';
 import type { Schedule } from '../types/schedule';
 import { supabase } from '../lib/supabase';
 import { getToday } from '../utils/dateUtils';
-
-interface ScheduleContextType {
-  schedules: Schedule[];
-  currentDate: string;
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  addSchedule: (schedule: Omit<Schedule, 'id'>) => void;
-  updateSchedule: (schedule: Schedule) => void;
-  deleteSchedule: (id: string) => void;
-  toggleComplete: (id: string) => void;
-  setCurrentDate: (date: string) => void;
-  getSchedulesByDate: (date: string) => Schedule[];
-}
-
-const ScheduleContext = createContext<ScheduleContextType | undefined>(undefined);
+import { ScheduleContext } from './ScheduleShared';
 
 function mapDbToSchedule(db: Record<string, unknown>): Schedule {
   return {
@@ -42,39 +27,58 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
 
+  async function loadSchedules(nextUser: User) {
+    try {
+      const { data, error } = await supabase
+        .from('schedules')
+        .select('*')
+        .eq('user_id', nextUser.id)
+        .order('date', { ascending: true });
+
+      if (error) {
+        console.error('Failed to load schedules:', error);
+        setSchedules([]);
+        return;
+      }
+
+      setSchedules((data ?? []).map(mapDbToSchedule));
+    } catch (error) {
+      console.error('Unexpected error while loading schedules:', error);
+      setSchedules([]);
+    }
+  }
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+    const syncAuthState = (nextSession: Session | null) => {
+      const nextUser = nextSession?.user ?? null;
+
+      setSession(nextSession);
+      setUser(nextUser);
+      setLoading(false);
+
+      if (nextUser) {
+        void loadSchedules(nextUser);
+      } else {
+        setSchedules([]);
+      }
+    };
+
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      syncAuthState(session);
+    }).catch((error) => {
+      console.error('Failed to restore session:', error);
+      setSession(null);
+      setUser(null);
+      setSchedules([]);
       setLoading(false);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+      syncAuthState(session);
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
-  useEffect(() => {
-    if (user) {
-      loadSchedules();
-    } else {
-      setSchedules([]);
-    }
-  }, [user]);
-
-  const loadSchedules = async () => {
-    const { data, error } = await supabase
-      .from('schedules')
-      .select('*')
-      .order('date', { ascending: true });
-
-    if (!error && data) {
-      setSchedules(data.map(mapDbToSchedule));
-    }
-  };
 
   const addSchedule = async (schedule: Omit<Schedule, 'id'>) => {
     if (!user) return;
@@ -171,12 +175,4 @@ export function ScheduleProvider({ children }: { children: ReactNode }) {
       {children}
     </ScheduleContext.Provider>
   );
-}
-
-export function useSchedule() {
-  const context = useContext(ScheduleContext);
-  if (context === undefined) {
-    throw new Error('useSchedule must be used within a ScheduleProvider');
-  }
-  return context;
 }

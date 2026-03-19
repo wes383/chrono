@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import type { Schedule, ScheduleFormData } from '../types/schedule';
 
 interface ScheduleFormProps {
@@ -11,25 +11,18 @@ interface ScheduleFormProps {
 const TITLE_MAX_LENGTH = 100;
 const DESCRIPTION_MAX_LENGTH = 500;
 
-export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFormProps) {
-  const [formData, setFormData] = useState<ScheduleFormData>({
-    title: '',
-    startTime: '',
-    endTime: '',
-    description: '',
-  });
-  const [errors, setErrors] = useState<Partial<Record<keyof ScheduleFormData, string>>>({});
+function getInitialFormData(schedule?: Schedule | null): ScheduleFormData {
+  return {
+    title: schedule?.title ?? '',
+    startTime: schedule?.startTime ?? '',
+    endTime: schedule?.endTime ?? '',
+    description: schedule?.description ?? '',
+  };
+}
 
-  useEffect(() => {
-    if (schedule) {
-      setFormData({
-        title: schedule.title,
-        startTime: schedule.startTime,
-        endTime: schedule.endTime || '',
-        description: schedule.description || '',
-      });
-    }
-  }, [schedule]);
+export function ScheduleForm({ schedule, date, onSubmit, onCancel }: ScheduleFormProps) {
+  const [formData, setFormData] = useState<ScheduleFormData>(() => getInitialFormData(schedule));
+  const [errors, setErrors] = useState<Partial<Record<keyof ScheduleFormData, string>>>({});
 
   const validate = (): boolean => {
     const newErrors: Partial<Record<keyof ScheduleFormData, string>> = {};

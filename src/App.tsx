@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Plus, LogOut } from 'lucide-react';
-import { ScheduleProvider, useSchedule } from './context/ScheduleContext';
+import { ScheduleProvider } from './context/ScheduleContext';
+import { useSchedule } from './context/useSchedule';
 import { Timeline } from './components/Timeline';
 import { DateSwitcher } from './components/DateSwitcher';
 import { Modal } from './components/Modal';
@@ -17,6 +18,7 @@ function AppContent() {
 
   const currentSchedules = getSchedulesByDate(currentDate);
   const isEditable = canEdit(currentDate);
+  const userLabel = user?.email?.split('@')[0] ?? '';
 
   const datesWithSchedules = Array.from(new Set(schedules.map(s => s.date)));
 
@@ -65,11 +67,19 @@ function AppContent() {
               {user && (
                 <button
                   onClick={handleLogout}
-                  className="flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 sm:w-auto sm:px-3 sm:py-1.5 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-900 rounded-lg transition-colors"
+                  className="group flex items-center justify-center min-w-[44px] min-h-[44px] sm:min-w-0 sm:min-h-0 sm:w-auto sm:px-3 sm:py-1.5 text-sm text-gray-500 hover:bg-gray-200 hover:text-gray-900 rounded-lg transition-colors"
                   title="Log out"
                 >
                   <LogOut className="sm:hidden w-5 h-5" />
-                  <span className="hidden sm:block truncate max-w-[160px]">{user.email}</span>
+                  <span className="relative hidden sm:block max-w-[160px]">
+                    <span className="block truncate invisible">{userLabel}</span>
+                    <span className="absolute inset-0 truncate transition-opacity group-hover:opacity-0">
+                      {userLabel}
+                    </span>
+                    <span className="absolute inset-0 flex items-center font-medium opacity-0 transition-opacity group-hover:opacity-100">
+                      Log out
+                    </span>
+                  </span>
                 </button>
               )}
             </div>
@@ -116,6 +126,7 @@ function AppContent() {
         title={editingSchedule ? 'Edit Schedule' : 'Add Schedule'}
       >
         <ScheduleForm
+          key={editingSchedule?.id ?? `new-${currentDate}`}
           schedule={editingSchedule}
           date={currentDate}
           onSubmit={handleSubmit}

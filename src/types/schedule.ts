@@ -17,16 +17,3 @@ export interface ScheduleFormData {
   endTime: string;
   description: string;
 }
-
-export interface AppState {
-  schedules: Schedule[];
-  currentDate: string;
-}
-
-export type ScheduleAction =
-  | { type: 'ADD_SCHEDULE'; payload: Schedule }
-  | { type: 'UPDATE_SCHEDULE'; payload: Schedule }
-  | { type: 'DELETE_SCHEDULE'; payload: string }
-  | { type: 'SET_SCHEDULES'; payload: Schedule[] }
-  | { type: 'SET_CURRENT_DATE'; payload: string }
-  | { type: 'TOGGLE_COMPLETE'; payload: string };
