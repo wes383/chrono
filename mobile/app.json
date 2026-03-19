@@ -19,7 +19,8 @@
         "backgroundColor": "#ffffff",
         "foregroundImage": "./assets/app-icon-1024.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.weswei.mobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
