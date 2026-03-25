@@ -5,66 +5,17 @@ import dayjs from 'dayjs';
 interface DateSwitcherProps {
   currentDate: string;
   onChange: (date: string) => void;
-  datesWithSchedules: string[];
 }
 
-export function DateSwitcher({ currentDate, onChange, datesWithSchedules }: DateSwitcherProps) {
-  const getNextDateWithSchedule = (fromDate: string, direction: 'prev' | 'next'): string | null => {
-    if (datesWithSchedules.length === 0) return null;
-    
-    const sortedDates = [...datesWithSchedules].sort();
-    
-    if (direction === 'next') {
-      for (let i = 0; i < sortedDates.length; i++) {
-        if (sortedDates[i] > fromDate) {
-          return sortedDates[i];
-        }
-      }
-      return null;
-    } else {
-      for (let i = sortedDates.length - 1; i >= 0; i--) {
-        if (sortedDates[i] < fromDate) {
-          return sortedDates[i];
-        }
-      }
-      return null;
-    }
-  };
-
+export function DateSwitcher({ currentDate, onChange }: DateSwitcherProps) {
   const handlePrevious = () => {
-    if (isToday(currentDate)) {
-      const prevDate = dayjs(currentDate).subtract(1, 'day').format('YYYY-MM-DD');
-      onChange(prevDate);
-    } else if (isTomorrow(currentDate)) {
-      const prevDate = dayjs(currentDate).subtract(1, 'day').format('YYYY-MM-DD');
-      onChange(prevDate);
-    } else {
-      const prevDateWithSchedule = getNextDateWithSchedule(currentDate, 'prev');
-      if (prevDateWithSchedule) {
-        onChange(prevDateWithSchedule);
-      }
-    }
+    const prevDate = dayjs(currentDate).subtract(1, 'day').format('YYYY-MM-DD');
+    onChange(prevDate);
   };
 
   const handleNext = () => {
-    if (isToday(currentDate)) {
-      const nextDate = dayjs(currentDate).add(1, 'day').format('YYYY-MM-DD');
-      onChange(nextDate);
-    } else if (isTomorrow(currentDate)) {
-      const nextDateWithSchedule = getNextDateWithSchedule(currentDate, 'next');
-      if (nextDateWithSchedule) {
-        onChange(nextDateWithSchedule);
-      }
-    } else if (isYesterday(currentDate)) {
-      // Yesterday can always go to Today
-      const nextDate = dayjs(currentDate).add(1, 'day').format('YYYY-MM-DD');
-      onChange(nextDate);
-    } else {
-      const nextDateWithSchedule = getNextDateWithSchedule(currentDate, 'next');
-      if (nextDateWithSchedule) {
-        onChange(nextDateWithSchedule);
-      }
-    }
+    const nextDate = dayjs(currentDate).add(1, 'day').format('YYYY-MM-DD');
+    onChange(nextDate);
   };
 
   const getDisplayLabel = (date: string): string => {
@@ -76,27 +27,11 @@ export function DateSwitcher({ currentDate, onChange, datesWithSchedules }: Date
 
   const displayLabel = getDisplayLabel(currentDate);
 
-  const hasPrevDate = (() => {
-    if (isToday(currentDate)) return true;
-    if (isTomorrow(currentDate)) return true;
-    return !!getNextDateWithSchedule(currentDate, 'prev');
-  })();
-  
-  const hasNextDate = (() => {
-    if (isToday(currentDate)) return true;
-    if (isTomorrow(currentDate)) {
-      return !!getNextDateWithSchedule(currentDate, 'next');
-    }
-    if (isYesterday(currentDate)) return true; // Yesterday can always go to Today
-    return !!getNextDateWithSchedule(currentDate, 'next');
-  })();
-
   return (
     <div className="flex items-center justify-between bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
       <button
         onClick={handlePrevious}
-        disabled={!hasPrevDate}
-        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
       >
         <ChevronLeft size={24} />
       </button>
@@ -110,8 +45,7 @@ export function DateSwitcher({ currentDate, onChange, datesWithSchedules }: Date
 
       <button
         onClick={handleNext}
-        disabled={!hasNextDate}
-        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+        className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
       >
         <ChevronRight size={24} />
       </button>

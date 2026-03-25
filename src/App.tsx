@@ -12,15 +12,13 @@ import type { Schedule } from './types/schedule';
 import { canEdit } from './utils/dateUtils';
 
 function AppContent() {
-  const { user, currentDate, setCurrentDate, addSchedule, updateSchedule, deleteSchedule, toggleComplete, getSchedulesByDate, schedules } = useSchedule();
+  const { user, currentDate, setCurrentDate, addSchedule, updateSchedule, deleteSchedule, toggleComplete, getSchedulesByDate } = useSchedule();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null);
 
   const currentSchedules = getSchedulesByDate(currentDate);
   const isEditable = canEdit(currentDate);
   const userLabel = user?.email?.split('@')[0] ?? '';
-
-  const datesWithSchedules = Array.from(new Set(schedules.map(s => s.date)));
 
   const handleAdd = () => {
     setEditingSchedule(null);
@@ -98,7 +96,7 @@ function AppContent() {
             )}
           </div>
           <div className="pb-3 -mx-3 sm:-mx-4 px-3 sm:px-4">
-            <DateSwitcher currentDate={currentDate} onChange={setCurrentDate} datesWithSchedules={datesWithSchedules} />
+            <DateSwitcher currentDate={currentDate} onChange={setCurrentDate} />
           </div>
         </div>
       </header>
